@@ -8,17 +8,7 @@ const refs = {
   timer: document.querySelector('.timer'),
 };
 
-// const options = {
-//   enableTime: true,
-//   time_24hr: true,
-//   defaultDate: new Date(),
-//   minuteIncrement: 1,
-//   onClose(selectedDates) {
-//     console.log(selectedDates[0]);
-//   },
-// };
-
-flatpickr('#datetime-picker', {
+const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
@@ -26,4 +16,6 @@ flatpickr('#datetime-picker', {
   onClose(selectedDates) {
     console.log(selectedDates[0]);
   },
-});
+};
+
+flatpickr('#datetime-picker', options);
