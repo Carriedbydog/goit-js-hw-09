@@ -26,8 +26,6 @@ function createPromise(position, delay, step) {
   }
 }
 
-console.log(formData);
-
 function createPromise(position, delay) {
   const time = setTimeout(() => {
     for (let i = 0; i < amount; i++) {
