@@ -1,5 +1,7 @@
 import flatpickr from 'flatpickr';
+import Notiflix from 'notiflix';
 import 'flatpickr/dist/flatpickr.min.css';
+
 // =================================================================
 
 const refs = {
@@ -9,52 +11,45 @@ const refs = {
 };
 
 // =================================================================
-
+const currentDate = new Date();
+let countdownInterval;
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    const currentDate = new Date();
-    const selectedDate = refs.input._flatpickr.selectedDates[0];
-    if (selectedDate <= currentDate) {
+    if (selectedDates[0] <= currentDate) {
       refs.startBtn.disabled = true;
-      alert('Please choose a date in the future');
+      Notiflix.Notify.warning('Please choose a date in the future');
     } else {
       refs.startBtn.disabled = false;
     }
+
+    let timeDifference = selectedDates[0] - currentDate;
+
+    // =================================================================
+    refs.startBtn.addEventListener('click', onStartBtnClick);
+    // =================================================================
+
+    function onStartBtnClick() {
+      updateTimer(convertMs(timeDifference));
+      clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        updateTimer(convertMs(timeDifference));
+        timeDifference -= 1000;
+        const time = convertMs(timeDifference);
+        if (timeDifference <= 0) {
+          clearInterval(countdownInterval);
+          refs.startBtn.disabled = true;
+          updateTimer(convertMs(0));
+        }
+      }, 1000);
+    }
   },
 };
-flatpickr('#datetime-picker', options);
 
-// =================================================================
-refs.startBtn.addEventListener('click', onStartBtnClick);
-// =================================================================
-
-function onStartBtnClick() {
-  const currentDate = new Date();
-  const selectedDate = refs.input._flatpickr.selectedDates[0];
-  let timeDifference = selectedDate - currentDate;
-  console.log(timeDifference);
-  updateTimer(convertMs(timeDifference));
-
-  if (selectedDate >= Date.now()) {
-    refs.startBtn.disabled = true;
-    let countdownInterval = setInterval(() => {
-      updateTimer(convertMs(timeDifference));
-      timeDifference -= 1000;
-      if (timeDifference <= 0) {
-        clearInterval(countdownInterval);
-        refs.startBtn.disabled = true;
-      } else {
-        const time = convertMs(timeDifference);
-        updateTimer(time);
-      }
-    }, 1000);
-  }
-}
-
+flatpickr(refs.input, options);
 function updateTimer(time) {
   refs.timer.querySelector('[data-days]').textContent = time.days;
   refs.timer.querySelector('[data-hours]').textContent = time.hours;
