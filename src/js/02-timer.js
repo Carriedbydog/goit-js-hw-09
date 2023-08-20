@@ -13,6 +13,7 @@ const refs = {
 // =================================================================
 const currentDate = new Date();
 let countdownInterval;
+refs.startBtn.disabled = true;
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -33,6 +34,7 @@ const options = {
     // =================================================================
 
     function onStartBtnClick() {
+      refs.startBtn.disabled = true;
       updateTimer(convertMs(timeDifference));
       clearInterval(countdownInterval);
       countdownInterval = setInterval(() => {
