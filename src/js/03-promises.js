@@ -27,7 +27,7 @@ function onFormSubmit(e) {
   e.preventDefault();
   const { delay, step, amount } = e.target.elements;
 
-  for (let i = 0; i < amount.value; i++) {
+  for (let i = 1; i < amount.value; i++) {
     createPromise(i + 1, i * Number(step.value) + i * Number(delay.value))
       .then(({ position, delay }) => {
         Notiflix.Notify.success(
